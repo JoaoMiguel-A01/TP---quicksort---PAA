@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Implementação do Quicksort Recursivo com testes de performance
@@ -10,60 +11,82 @@ public class Main {
     private static final Random random = new Random();
     
     public static void main(String[] args) {
-        System.out.println("=== QUICKSORT RECURSIVO - ANÁLISE DE PERFORMANCE ===\n");
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n=== QUICKSORT - MENU ===");
+            System.out.println("1 - Quicksort padrão (recursivo)");
+            System.out.println("2 - Quicksort híbrido (determinar M empiricamente)");
+            System.out.println("3 - Quicksort híbrido (inserir M manualmente)");
+            System.out.println("4 - Sair");
+            System.out.print("Escolha uma opção: ");
+            int opcao = sc.nextInt();
+            switch (opcao) {
+                case 1:
+                    executarTestes(1, 0);
+                    break;
+                case 2:
+                    int melhorM = determinarMelhorM();
+                    System.out.println("Melhor M determinado: " + melhorM);
+                    executarTestes(2, melhorM);
+                    break;
+                case 3:
+                    System.out.print("Digite o valor de M (subvetor <= M usa Insertion Sort): ");
+                    int M = sc.nextInt();
+                    executarTestes(2, M);
+                    break;
+                case 4:
+                    System.out.println("Saindo...");
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        }
+    }
+
+    // Executa os 3 testes (aleatório, melhor caso, pior caso) usando o algoritmo escolhido
+    private static void executarTestes(int algoritmo, int M) {
+        System.out.println("=== QUICKSORT - ANÁLISE DE PERFORMANCE ===\n");
         
-        // Teste 1: Array aleatório de 10000 elementos
         System.out.println("1. ARRAY ALEATÓRIO (10000 elementos)");
         System.out.println("=====================================");
         int[] arrayAleatorio = gerarArrayAleatorio(10000);
-        testarQuicksort(arrayAleatorio, "Array Aleatório");
+        testarQuicksort(arrayAleatorio, "Array Aleatório", algoritmo, M);
         
-        // Teste 2: Melhor caso - array já ordenado
         System.out.println("\n2. MELHOR CASO - Array já ordenado (10000 elementos)");
         System.out.println("=====================================================");
         int[] arrayOrdenado = gerarArrayOrdenado(10000);
-        testarQuicksort(arrayOrdenado, "Melhor Caso");
+        testarQuicksort(arrayOrdenado, "Melhor Caso", algoritmo, M);
         
-        // Teste 3: Pior caso - array ordenado inversamente
         System.out.println("\n3. PIOR CASO - Array ordenado inversamente (10000 elementos)");
         System.out.println("===========================================================");
         int[] arrayInverso = gerarArrayInverso(10000);
-        testarQuicksort(arrayInverso, "Pior Caso");
+        testarQuicksort(arrayInverso, "Pior Caso", algoritmo, M);
         
-        // Resumo dos resultados
-        System.out.println("\n" + "=".repeat(60));
+        String linha = new String(new char[60]).replace('\0', '=');
+        System.out.println("\n" + linha);
         System.out.println("RESUMO DOS RESULTADOS");
-        System.out.println("=".repeat(60));
+        System.out.println(linha);
         System.out.println("• Melhor caso: Array já ordenado - O(n log n)");
         System.out.println("• Pior caso: Array ordenado inversamente - O(n²)");
         System.out.println("• Caso médio: Array aleatório - O(n log n) em média");
     }
-    
-    /**
-     * Testa o Quicksort em um array e exibe os resultados
-     */
-    private static void testarQuicksort(int[] array, String tipo) {
-        // Criar cópia do array original
+
+    // Testador unificado: algoritmo 1 = quicksort padrão (Main.quicksort), 2 = híbrido (QuicksortHibrido)
+    private static void testarQuicksort(int[] array, String tipo, int algoritmo, int M) {
         int[] arrayParaOrdenar = Arrays.copyOf(array, array.length);
-        
-        // Mostrar estatísticas do array original
         mostrarEstatisticas(array, tipo);
-        
-        // Medir tempo de execução
         long inicio = System.currentTimeMillis();
-        quicksort(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1);
+        if (algoritmo == 1) {
+            quicksort(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1);
+        } else {
+            QuicksortHibrido.quicksortHibrido(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1, M);
+        }
         long fim = System.currentTimeMillis();
-        
         long tempoExecucao = fim - inicio;
-        
-        // Verificar se está ordenado
         boolean ordenado = verificarOrdenacao(arrayParaOrdenar);
-        
-        // Exibir resultados
         System.out.println("Tempo de execução: " + tempoExecucao + " ms");
         System.out.println("Array ordenado corretamente: " + (ordenado ? "✓ SIM" : "✗ NÃO"));
-        
-        // Mostrar alguns elementos do array ordenado
         if (arrayParaOrdenar.length <= 20) {
             System.out.println("Array ordenado: " + Arrays.toString(arrayParaOrdenar));
         } else {
@@ -74,7 +97,33 @@ public class Main {
                     arrayParaOrdenar.length-10, arrayParaOrdenar.length)));
         }
     }
-    
+
+    // Determina empiricamente o melhor M usando vetores de 1000 elementos
+    private static int determinarMelhorM() {
+        int melhorM = 2;
+        long melhorTempo = Long.MAX_VALUE;
+        final int TAM = 1000;
+        final int TESTES_POR_M = 10; // reduzir se estiver lento
+        for (int M = 2; M <= 50; M++) {
+            long somaTempo = 0;
+            for (int t = 0; t < TESTES_POR_M; t++) {
+                int[] arr = gerarArrayAleatorio(TAM);
+                int[] copia = Arrays.copyOf(arr, arr.length);
+                long inicio = System.currentTimeMillis();
+                QuicksortHibrido.quicksortHibrido(copia, 0, copia.length - 1, M);
+                long fim = System.currentTimeMillis();
+                somaTempo += (fim - inicio);
+            }
+            long media = somaTempo / TESTES_POR_M;
+            //System.out.println("M=" + M + " -> " + media + " ms");
+            if (media < melhorTempo) {
+                melhorTempo = media;
+                melhorM = M;
+            }
+        }
+        return melhorM;
+    }
+
     /**
      * Implementação do algoritmo Quicksort recursivo
      */
