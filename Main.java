@@ -35,6 +35,16 @@ public class Main {
                     executarTestes(2, M);
                     break;
                 case 4:
+                    int melhorMC = determinarMelhorM(true);
+                    System.out.println("Melhor M determinado (Híbrido com Mediana-de-Três): " + melhorMC);
+                    executarTestes(3, melhorMC);
+                    break;
+                case 5:
+                    System.out.print("Digite o valor de M (subvetor <= M usa Insertion Sort): ");
+                    int MC = sc.nextInt();
+                    executarTestes(3, MC);
+                    break;
+                case 6:
                     System.out.println("Saindo...");
                     sc.close();
                     return;
