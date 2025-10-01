@@ -9,6 +9,11 @@ import java.util.Scanner;
 public class Main {
 
     private static final Random random = new Random();
+    
+    // Contadores globais para comparações e trocas
+    private static long comparacoes = 0;
+    private static long trocas = 0;
+    private static final int NUM_EXECUCOES = 10; // Execuções para obter médias
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -86,29 +91,77 @@ public class Main {
 
     // Testador unificado: 1=padrão, 2=híbrido, 3=híbrido com mediana-de-três
     private static void testarQuicksort(int[] array, String tipo, int algoritmo, int M) {
-        int[] arrayParaOrdenar = Arrays.copyOf(array, array.length);
         mostrarEstatisticas(array, tipo);
-        long inicio = System.currentTimeMillis();
-        if (algoritmo == 1) {
-            quicksort(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1);
-        } else if (algoritmo == 2) {
-            QuicksortHibrido.quicksortHibrido(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1, M);
-        } else if (algoritmo == 3) {
-            QuicksortHibrido_C.quicksortHibridoMedianaDeTres(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1, M);
+        
+        // Executar múltiplas vezes e calcular médias
+        long somaTempos = 0;
+        long somaComparacoes = 0;
+        long somaTrocas = 0;
+        boolean todosOrdenados = true;
+        
+        System.out.println("\nExecutando " + NUM_EXECUCOES + " vezes...");
+        for (int i = 0; i < NUM_EXECUCOES; i++) {
+            int[] arrayParaOrdenar = Arrays.copyOf(array, array.length);
+            
+            // Resetar contadores
+            comparacoes = 0;
+            trocas = 0;
+            
+            // Medir tempo usando relógio da máquina
+            long inicio = System.currentTimeMillis();
+            if (algoritmo == 1) {
+                quicksort(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1);
+            } else if (algoritmo == 2) {
+                QuicksortHibrido.quicksortHibrido(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1, M);
+            } else if (algoritmo == 3) {
+                QuicksortHibrido_C.quicksortHibridoMedianaDeTres(arrayParaOrdenar, 0, arrayParaOrdenar.length - 1, M);
+            }
+            long fim = System.currentTimeMillis();
+            
+            if (!verificarOrdenacao(arrayParaOrdenar)) {
+                todosOrdenados = false;
+            }
+            
+            somaTempos += (fim - inicio);
+            somaComparacoes += comparacoes;
+            somaTrocas += trocas;
+            
+            System.out.print(".");
+            if ((i + 1) % 10 == 0) System.out.print(" ");
         }
-        long fim = System.currentTimeMillis();
-        long tempoExecucao = fim - inicio;
-        boolean ordenado = verificarOrdenacao(arrayParaOrdenar);
-        System.out.println("Tempo de execução: " + tempoExecucao + " ms");
-        System.out.println("Array ordenado corretamente: " + (ordenado ? "✓ SIM" : "✗ NÃO"));
-        if (arrayParaOrdenar.length <= 20) {
-            System.out.println("Array ordenado: " + Arrays.toString(arrayParaOrdenar));
+        
+        // Calcular médias
+        double mediaTempos = (double) somaTempos / NUM_EXECUCOES;
+        double mediaComparacoes = (double) somaComparacoes / NUM_EXECUCOES;
+        double mediaTrocas = (double) somaTrocas / NUM_EXECUCOES;
+        
+        // Exibir resultados
+        System.out.println("\n\n--- RESULTADOS (Média de " + NUM_EXECUCOES + " execuções) ---");
+        System.out.printf("Tempo médio de execução: %.2f ms\n", mediaTempos);
+        System.out.printf("Comparações médias: %.0f\n", mediaComparacoes);
+        System.out.printf("Trocas médias: %.0f\n", mediaTrocas);
+        System.out.println("Array ordenado corretamente: " + (todosOrdenados ? "✓ SIM" : "✗ NÃO"));
+        
+        // Mostrar amostra de um array ordenado
+        int[] arrayParaMostrar = Arrays.copyOf(array, array.length);
+        comparacoes = 0;
+        trocas = 0;
+        if (algoritmo == 1) {
+            quicksort(arrayParaMostrar, 0, arrayParaMostrar.length - 1);
+        } else if (algoritmo == 2) {
+            QuicksortHibrido.quicksortHibrido(arrayParaMostrar, 0, arrayParaMostrar.length - 1, M);
+        } else if (algoritmo == 3) {
+            QuicksortHibrido_C.quicksortHibridoMedianaDeTres(arrayParaMostrar, 0, arrayParaMostrar.length - 1, M);
+        }
+        
+        if (arrayParaMostrar.length <= 20) {
+            System.out.println("Array ordenado: " + Arrays.toString(arrayParaMostrar));
         } else {
             System.out.println("Primeiros 10 elementos: " +
-                Arrays.toString(Arrays.copyOf(arrayParaOrdenar, 10)));
+                Arrays.toString(Arrays.copyOf(arrayParaMostrar, 10)));
             System.out.println("Últimos 10 elementos: " +
-                Arrays.toString(Arrays.copyOfRange(arrayParaOrdenar,
-                    arrayParaOrdenar.length - 10, arrayParaOrdenar.length)));
+                Arrays.toString(Arrays.copyOfRange(arrayParaMostrar,
+                    arrayParaMostrar.length - 10, arrayParaMostrar.length)));
         }
     }
 
@@ -143,21 +196,25 @@ public class Main {
     }
 
     /**
-     * Implementação do algoritmo Quicksort recursivo
+     * Implementação do algoritmo Quicksort recursivo com contadores
      */
     public static void quicksort(int[] array, int inicio, int fim) {
         if (inicio < fim) {
+            comparacoes++; // Conta comparação inicio < fim
+            
             // Particionar o array e obter o índice do pivô
             int indicePivo = particionar(array, inicio, fim);
             
             // Recursivamente ordenar os elementos antes e depois do pivô
             quicksort(array, inicio, indicePivo - 1);
             quicksort(array, indicePivo + 1, fim);
+        } else {
+            comparacoes++; // Conta comparação inicio < fim (caso falso)
         }
     }
 
     /**
-     * Função de particionamento do Quicksort
+     * Função de particionamento do Quicksort com contadores
      */
     private static int particionar(int[] array, int inicio, int fim) {
         // Escolher o último elemento como pivô
@@ -165,6 +222,8 @@ public class Main {
         int i = inicio - 1; // Índice do menor elemento
         
         for (int j = inicio; j < fim; j++) {
+            comparacoes++; // Conta comparação array[j] <= pivo
+            
             // Se o elemento atual é menor ou igual ao pivô
             if (array[j] <= pivo) {
                 i++;
@@ -178,9 +237,12 @@ public class Main {
     }
 
     /**
-     * Função auxiliar para trocar elementos do array
+     * Função auxiliar para trocar elementos do array com contador
      */
     private static void trocar(int[] array, int i, int j) {
+        if (i != j) { // Só conta troca se for em posições diferentes
+            trocas++;
+        }
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
