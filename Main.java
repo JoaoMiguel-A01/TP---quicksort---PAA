@@ -61,7 +61,7 @@ public class Main {
         }
     }
 
-    // Executa os 3 testes (aleatório, melhor caso, pior caso) usando o algoritmo escolhido
+    // Executa os testes (aleatório, ordenado, inverso, repetidos, quase ordenado, todos iguais)
     private static void executarTestes(int algoritmo, int M) {
         System.out.println("=== QUICKSORT - ANÁLISE DE PERFORMANCE ===\n");
 
@@ -70,23 +70,41 @@ public class Main {
         int[] arrayAleatorio = gerarArrayAleatorio(10000);
         testarQuicksort(arrayAleatorio, "Array Aleatório", algoritmo, M);
 
-        System.out.println("\n2. MELHOR CASO - Array já ordenado (10000 elementos)");
-        System.out.println("=====================================================");
+        System.out.println("\n2. ARRAY ORDENADO (10000 elementos)");
+        System.out.println("====================================");
         int[] arrayOrdenado = gerarArrayOrdenado(10000);
-        testarQuicksort(arrayOrdenado, "Melhor Caso", algoritmo, M);
+        testarQuicksort(arrayOrdenado, "Array Ordenado", algoritmo, M);
 
-        System.out.println("\n3. PIOR CASO - Array ordenado inversamente (10000 elementos)");
-        System.out.println("===========================================================");
+        System.out.println("\n3. ARRAY ORDENADO INVERSAMENTE - Pior Caso (10000 elementos)");
+        System.out.println("=============================================================");
         int[] arrayInverso = gerarArrayInverso(10000);
-        testarQuicksort(arrayInverso, "Pior Caso", algoritmo, M);
+        testarQuicksort(arrayInverso, "Array Inverso (Pior Caso)", algoritmo, M);
 
-        String linha = new String(new char[60]).replace('\0', '=');
+        System.out.println("\n4. ARRAY COM ELEMENTOS REPETIDOS (10000 elementos)");
+        System.out.println("===================================================");
+        int[] arrayRepetidos = gerarArrayComRepeticoes(10000, 100);
+        testarQuicksort(arrayRepetidos, "Array com Repetições", algoritmo, M);
+
+        System.out.println("\n5. ARRAY QUASE ORDENADO (10000 elementos, 10% desordenado)");
+        System.out.println("============================================================");
+        int[] arrayQuaseOrdenado = gerarArrayQuaseOrdenado(10000, 10);
+        testarQuicksort(arrayQuaseOrdenado, "Array Quase Ordenado", algoritmo, M);
+
+        System.out.println("\n6. ARRAY COM TODOS ELEMENTOS IGUAIS (10000 elementos)");
+        System.out.println("======================================================");
+        int[] arrayTodosIguais = gerarArrayTodosIguais(10000);
+        testarQuicksort(arrayTodosIguais, "Array Todos Iguais", algoritmo, M);
+
+        String linha = new String(new char[70]).replace('\0', '=');
         System.out.println("\n" + linha);
         System.out.println("RESUMO DOS RESULTADOS");
         System.out.println(linha);
-        System.out.println("• Melhor caso: Array já ordenado - O(n log n)");
-        System.out.println("• Pior caso: Array ordenado inversamente - O(n²)");
-        System.out.println("• Caso médio: Array aleatório - O(n log n) em média");
+        System.out.println("• Caso médio: Array aleatório - O(n log n)");
+        System.out.println("• Melhor caso: Array já ordenado- O(n log n)");
+        System.out.println("• Pior caso: Array ordenado inversamente (pior caso) - O(n²)");
+        System.out.println("• Repetidos: Muitos elementos duplicados - O(n log n)");
+        System.out.println("• Quase ordenado: 90% ordenado, 10% desordenado - O(n log n)");
+        System.out.println("• Todos iguais: Todos os elementos com mesmo valor - O(n²)");
     }
 
     // Testador unificado: 1=padrão, 2=híbrido, 3=híbrido com mediana-de-três
@@ -289,6 +307,57 @@ public class Main {
             array[i] = array[tamanho - 1 - i];
             array[tamanho - 1 - i] = temp;
         }
+        return array;
+    }
+
+    /**
+     * Gera um array com elementos repetidos
+     * @param tamanho tamanho do array
+     * @param numValoresUnicos número de valores únicos diferentes
+     */
+    private static int[] gerarArrayComRepeticoes(int tamanho, int numValoresUnicos) {
+        int[] array = new int[tamanho];
+        for (int i = 0; i < tamanho; i++) {
+            // Gera valores entre 0 e numValoresUnicos-1, causando muitas repetições
+            array[i] = random.nextInt(numValoresUnicos);
+        }
+        return array;
+    }
+
+    /**
+     * Gera um array quase ordenado
+     * @param tamanho tamanho do array
+     * @param percentualDesordenado percentual de elementos fora de ordem (0-100)
+     */
+    private static int[] gerarArrayQuaseOrdenado(int tamanho, int percentualDesordenado) {
+        int[] array = gerarArrayOrdenado(tamanho);
+        
+        // Calcular número de trocas para desorganizar o array
+        int numTrocas = (tamanho * percentualDesordenado) / 100;
+        
+        for (int i = 0; i < numTrocas; i++) {
+            int pos1 = random.nextInt(tamanho);
+            int pos2 = random.nextInt(tamanho);
+            int temp = array[pos1];
+            array[pos1] = array[pos2];
+            array[pos2] = temp;
+        }
+        
+        return array;
+    }
+
+    /**
+     * Gera um array com todos os elementos iguais
+     * @param tamanho tamanho do array
+     */
+    private static int[] gerarArrayTodosIguais(int tamanho) {
+        int[] array = new int[tamanho];
+        int valor = random.nextInt(1000); // Um valor aleatório qualquer
+        
+        for (int i = 0; i < tamanho; i++) {
+            array[i] = valor;
+        }
+        
         return array;
     }
 
