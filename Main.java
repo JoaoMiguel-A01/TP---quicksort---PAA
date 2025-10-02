@@ -14,7 +14,9 @@ public class Main {
     private static long comparacoes = 0;
     private static long trocas = 0;
     private static final int NUM_EXECUCOES = 10; // Execuções para obter médias
-
+    // Tamanho configurável do array usado nos testes (padrão 10000)
+    private static int TAMANHO_ARRAY = 10000;
+    
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -24,7 +26,8 @@ public class Main {
             System.out.println("3 - Quicksort híbrido (inserir M manualmente)");
             System.out.println("4 - Quicksort híbrido com Mediana-de-Três (determinar M empiricamente)");
             System.out.println("5 - Quicksort híbrido com Mediana-de-Três (inserir M manualmente)");
-            System.out.println("6 - Sair");
+            System.out.println("6 - Definir tamanho do vetor (atual: " + TAMANHO_ARRAY + " elementos)");
+            System.out.println("7 - Sair");
             System.out.print("Escolha uma opção: ");
             int opcao = sc.nextInt();
             switch (opcao) {
@@ -52,6 +55,16 @@ public class Main {
                     executarTestes(3, MC);
                     break;
                 case 6:
+                    System.out.print("Digite o novo tamanho do vetor (inteiro > 0): ");
+                    int novoTamanho = sc.nextInt();
+                    if (novoTamanho > 0) {
+                        TAMANHO_ARRAY = novoTamanho;
+                        System.out.println("Tamanho do vetor atualizado para " + TAMANHO_ARRAY + " elementos.");
+                    } else {
+                        System.out.println("Tamanho inválido. Mantendo " + TAMANHO_ARRAY + " elementos.");
+                    }
+                    break;
+                case 7:
                     System.out.println("Saindo...");
                     sc.close();
                     return;
@@ -65,34 +78,34 @@ public class Main {
     private static void executarTestes(int algoritmo, int M) {
         System.out.println("=== QUICKSORT - ANÁLISE DE PERFORMANCE ===\n");
 
-        System.out.println("1. ARRAY ALEATÓRIO (10000 elementos)");
+        System.out.println("1. ARRAY ALEATÓRIO (" + TAMANHO_ARRAY + " elementos)");
         System.out.println("=====================================");
-        int[] arrayAleatorio = gerarArrayAleatorio(10000);
+        int[] arrayAleatorio = gerarArrayAleatorio(TAMANHO_ARRAY);
         testarQuicksort(arrayAleatorio, "Array Aleatório", algoritmo, M);
 
-        System.out.println("\n2. ARRAY ORDENADO (10000 elementos)");
+        System.out.println("\n2. ARRAY ORDENADO (" + TAMANHO_ARRAY + " elementos)");
         System.out.println("====================================");
-        int[] arrayOrdenado = gerarArrayOrdenado(10000);
+        int[] arrayOrdenado = gerarArrayOrdenado(TAMANHO_ARRAY);
         testarQuicksort(arrayOrdenado, "Array Ordenado", algoritmo, M);
 
-        System.out.println("\n3. ARRAY ORDENADO INVERSAMENTE - Pior Caso (10000 elementos)");
+        System.out.println("\n3. ARRAY ORDENADO INVERSAMENTE - Pior Caso (" + TAMANHO_ARRAY + " elementos)");
         System.out.println("=============================================================");
-        int[] arrayInverso = gerarArrayInverso(10000);
+        int[] arrayInverso = gerarArrayInverso(TAMANHO_ARRAY);
         testarQuicksort(arrayInverso, "Array Inverso (Pior Caso)", algoritmo, M);
 
-        System.out.println("\n4. ARRAY COM ELEMENTOS REPETIDOS (10000 elementos)");
+        System.out.println("\n4. ARRAY COM ELEMENTOS REPETIDOS (" + TAMANHO_ARRAY + " elementos)");
         System.out.println("===================================================");
-        int[] arrayRepetidos = gerarArrayComRepeticoes(10000, 100);
+        int[] arrayRepetidos = gerarArrayComRepeticoes(TAMANHO_ARRAY, 100);
         testarQuicksort(arrayRepetidos, "Array com Repetições", algoritmo, M);
 
-        System.out.println("\n5. ARRAY QUASE ORDENADO (10000 elementos, 10% desordenado)");
+        System.out.println("\n5. ARRAY QUASE ORDENADO (" + TAMANHO_ARRAY + " elementos, 10% desordenado)");
         System.out.println("============================================================");
-        int[] arrayQuaseOrdenado = gerarArrayQuaseOrdenado(10000, 10);
+        int[] arrayQuaseOrdenado = gerarArrayQuaseOrdenado(TAMANHO_ARRAY, 10);
         testarQuicksort(arrayQuaseOrdenado, "Array Quase Ordenado", algoritmo, M);
 
-        System.out.println("\n6. ARRAY COM TODOS ELEMENTOS IGUAIS (10000 elementos)");
+        System.out.println("\n6. ARRAY COM TODOS ELEMENTOS IGUAIS (" + TAMANHO_ARRAY + " elementos)");
         System.out.println("======================================================");
-        int[] arrayTodosIguais = gerarArrayTodosIguais(10000);
+        int[] arrayTodosIguais = gerarArrayTodosIguais(TAMANHO_ARRAY);
         testarQuicksort(arrayTodosIguais, "Array Todos Iguais", algoritmo, M);
 
         String linha = new String(new char[70]).replace('\0', '=');
