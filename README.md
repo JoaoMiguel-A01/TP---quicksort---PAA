@@ -1,4 +1,4 @@
-# Quicksort Híbrido — Análise de Performance
+# Trabalho Prático  - Projeto e Análise de Algoritmos - Implementações e Testes com Quicksort
 
 Projeto acadêmico de **Projeto e Análise de Algoritmos** que implementa e avalia variações do Quicksort em diferentes cenários de entrada. Inclui versões **padrão**, **híbridas** (com *Insertion Sort* em subvetores pequenos) e **híbridas com Mediana-de-Três** para seleção de pivô. O programa executa baterias de testes, mede tempos médios e valida a ordenação.  [1](https://sgapucminasbr-my.sharepoint.com/personal/1336147_sga_pucminas_br/Documents/Arquivos%20de%20Microsoft%20Copilot%20Chat/Main.java)
 
@@ -7,7 +7,7 @@ Projeto acadêmico de **Projeto e Análise de Algoritmos** que implementa e aval
 
 ---
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 - `Main.java` — Interface de menu, geração dos arrays de teste, laço de medições (100 execuções por cenário), contadores globais de comparações e trocas (para o Quicksort padrão), e rotina para **determinar empiricamente o melhor M**.  [1](https://sgapucminasbr-my.sharepoint.com/personal/1336147_sga_pucminas_br/Documents/Arquivos%20de%20Microsoft%20Copilot%20Chat/Main.java)
 - `QuicksortHibrido.java` — Quicksort híbrido: quando o subvetor tem tamanho `<= M`, usa **Insertion Sort**; caso contrário, particiona (pivô determinístico no fim) e recursa.  [2](https://sgapucminasbr-my.sharepoint.com/personal/1336147_sga_pucminas_br/Documents/Arquivos%20de%20Microsoft%20Copilot%20Chat/QuicksortHibrido.java)
@@ -15,7 +15,7 @@ Projeto acadêmico de **Projeto e Análise de Algoritmos** que implementa e aval
 
 ---
 
-## 🧠 Algoritmos Implementados
+## Algoritmos Implementados
 
 1. **Quicksort padrão (recursivo):** particionamento com pivô no fim do subarray; contabiliza comparações e trocas.  [1](https://sgapucminasbr-my.sharepoint.com/personal/1336147_sga_pucminas_br/Documents/Arquivos%20de%20Microsoft%20Copilot%20Chat/Main.java)
 2. **Quicksort híbrido (pivô determinístico):** usa *Insertion Sort* em subproblemas de tamanho `<= M`.  [2](https://sgapucminasbr-my.sharepoint.com/personal/1336147_sga_pucminas_br/Documents/Arquivos%20de%20Microsoft%20Copilot%20Chat/QuicksortHibrido.java)
@@ -23,7 +23,7 @@ Projeto acadêmico de **Projeto e Análise de Algoritmos** que implementa e aval
 
 ---
 
-## 🧪 Cenários de Teste
+## Cenários de Teste
 
 O programa gera e testa automaticamente os seguintes perfis de entrada (para tamanho configurável, padrão **10.000**):
 
@@ -38,7 +38,7 @@ Cada cenário é executado **100 vezes** e o programa exibe **médias** e verifi
 
 ---
 
-## 🖥️ Como Executar
+## Como Executar
 
 ### Pré-requisitos
 - **Java 8+** instalado (JDK).
