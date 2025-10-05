@@ -1,6 +1,15 @@
+/**
+ * Projeto e Análise de Algoritmos 
+ * Pontifícia Universidade de Minas Gerais
+ * Instituto de Ciências Exatas e Informática
+ * Engenharia de Computação
+ * Última Atualização: 05/10/2025
+ * Integrantes: João Miguel de Abreu Constâncio, Paulo Ricardo Ferreira Gualberto, Lucas Bretz Araújo Petinga.
+ */
+
 public class QuicksortHibrido_C {
 
-    /*Quicksort híbrido que usa Insertion Sort para subvetores pequenos (tamanho <= M)
+    /*Quicksort híbrido que usa Insertion Sort para subvetores pequenos, de tamanho menor que M
     e a técnica de mediana-de-três para a escolha do pivô.*/
 
     public static void quicksortHibridoMedianaDeTres(int[] array, int inicio, int fim, int M) {

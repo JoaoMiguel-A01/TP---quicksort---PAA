@@ -1,11 +1,17 @@
+/**
+ * Projeto e Análise de Algoritmos 
+ * Pontifícia Universidade de Minas Gerais
+ * Instituto de Ciências Exatas e Informática
+ * Engenharia de Computação
+ * Última Atualização: 05/10/2025
+ * Integrantes: João Miguel de Abreu Constâncio, Paulo Ricardo Ferreira Gualberto, Lucas Bretz Araújo Petinga.
+ */
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-/**
- * Implementação do Quicksort Recursivo com testes de performance
- * Demonstra melhor caso, pior caso e array aleatório de 10000 elementos
- */
+
 public class Main {
 
     private static final Random random = new Random();
@@ -13,8 +19,8 @@ public class Main {
     // Contadores globais para comparações e trocas
     private static long comparacoes = 0;
     private static long trocas = 0;
-    private static final int NUM_EXECUCOES = 10; // Execuções para obter médias
-    // Tamanho configurável do array usado nos testes (padrão 10000)
+    private static final int NUM_EXECUCOES = 100; // Número de execuções para obter médias
+    // Tamanho configurável do array usado nos testes
     private static int TAMANHO_ARRAY = 10000;
     
     public static void main(String[] args) {
@@ -74,7 +80,7 @@ public class Main {
         }
     }
 
-    // Executa os testes (aleatório, ordenado, inverso, repetidos, quase ordenado, todos iguais)
+    // Executa os testes
     private static void executarTestes(int algoritmo, int M) {
         System.out.println("=== QUICKSORT - ANÁLISE DE PERFORMANCE ===\n");
 
@@ -112,12 +118,12 @@ public class Main {
         System.out.println("\n" + linha);
         System.out.println("RESUMO DOS RESULTADOS");
         System.out.println(linha);
-        System.out.println("• Caso médio: Array aleatório - O(n log n)");
-        System.out.println("• Melhor caso: Array já ordenado- O(n log n)");
-        System.out.println("• Pior caso: Array ordenado inversamente (pior caso) - O(n²)");
-        System.out.println("• Repetidos: Muitos elementos duplicados - O(n log n)");
-        System.out.println("• Quase ordenado: 90% ordenado, 10% desordenado - O(n log n)");
-        System.out.println("• Todos iguais: Todos os elementos com mesmo valor - O(n²)");
+        System.out.println("Caso médio: Array aleatório - O(n log n)");
+        System.out.println("Melhor caso: Array já ordenado- O(n log n)");
+        System.out.println("Pior caso: Array ordenado inversamente (pior caso) - O(n²)");
+        System.out.println("Repetidos: Muitos elementos duplicados - O(n log n)");
+        System.out.println("Quase ordenado: 90% ordenado, 10% desordenado - O(n log n)");
+        System.out.println("Todos iguais: Todos os elementos com mesmo valor - O(n²)");
     }
 
     // Testador unificado: 1=padrão, 2=híbrido, 3=híbrido com mediana-de-três
@@ -292,7 +298,7 @@ public class Main {
     }
 
     /**
-     * Gera um array já ordenado (melhor caso)
+     * Gera um array já ordenado - Melhor caso
      */
     private static int[] gerarArrayOrdenado(int tamanho) {
         int[] array = new int[tamanho];
@@ -305,7 +311,7 @@ public class Main {
     }
 
     /**
-     * Gera um array ordenado inversamente (pior caso)
+     * Gera um array ordenado inversamente - Pior caso
      */
     private static int[] gerarArrayInverso(int tamanho) {
         int[] array = new int[tamanho];
@@ -340,7 +346,7 @@ public class Main {
     /**
      * Gera um array quase ordenado
      * @param tamanho tamanho do array
-     * @param percentualDesordenado percentual de elementos fora de ordem (0-100)
+     * @param percentualDesordenado percentual de elementos fora de ordem de 0 à 100
      */
     private static int[] gerarArrayQuaseOrdenado(int tamanho, int percentualDesordenado) {
         int[] array = gerarArrayOrdenado(tamanho);

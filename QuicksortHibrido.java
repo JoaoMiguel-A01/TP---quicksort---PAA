@@ -1,3 +1,13 @@
+/**
+ * Projeto e Análise de Algoritmos 
+ * Pontifícia Universidade de Minas Gerais
+ * Instituto de Ciências Exatas e Informática
+ * Engenharia de Computação
+ * Última Atualização: 05/10/2025
+ * Integrantes: João Miguel de Abreu Constâncio, Paulo Ricardo Ferreira Gualberto, Lucas Bretz Araújo Petinga.
+ */
+
+
 public class QuicksortHibrido {
 
     // Quicksort híbrido: para subvetores com tamanho <= M usa Insertion Sort
